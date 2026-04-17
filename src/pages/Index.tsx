@@ -25,6 +25,8 @@ const DocumentationPage = lazy(() => import("@/components/DocumentationPage").th
 
 declare const __APP_VERSION__: string;
 
+import { WorkTimerProvider } from "@/providers/WorkTimerProvider";
+
 const Index = () => {
   const APP_VERSION = String(__APP_VERSION__).replace(/^v/i, '');
   const BUILD_TIMESTAMP = String(__BUILD_TIMESTAMP__);
@@ -79,64 +81,66 @@ const Index = () => {
   }, []);
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AppSidebar activeView={activeView} onViewChange={handleViewChange} />
-        <div className="flex-1 flex flex-col min-w-0">
-          <AppHeader currentDateTime={currentDateTime} isAppUpToDate={isAppUpToDate} />
+    <WorkTimerProvider>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-background">
+          <AppSidebar activeView={activeView} onViewChange={handleViewChange} />
+          <div className="flex-1 flex flex-col min-w-0">
+            <AppHeader currentDateTime={currentDateTime} isAppUpToDate={isAppUpToDate} />
 
-           <main className="flex-1 px-3 py-4 md:px-6 md:py-6 overflow-auto" role="main">
-            <Suspense fallback={<div className="flex items-center justify-center h-full text-muted-foreground">Carregando...</div>}>
-              {activeView === "painel" && <PainelView />}
+             <main className="flex-1 px-3 py-4 md:px-6 md:py-6 overflow-auto" role="main">
+              <Suspense fallback={<div className="flex items-center justify-center h-full text-muted-foreground">Carregando...</div>}>
+                {activeView === "painel" && <PainelView />}
 
-              {activeView === "procedimentos" && (
-                <ProcedimentosView
-                  procedures={procedures}
-                  isLoading={isLoading}
-                  showImportDialog={showImportDialog}
-                  setShowImportDialog={setShowImportDialog}
-                  createProcedure={createProcedure}
-                  exportBackup={exportBackup}
-                  importBackup={importBackup}
-                  moveProcedure={moveProcedure}
-                  onSelectProcedure={setSelectedProcedure}
-                  touchProcedureDate={touchProcedureDate}
-                  lastBackupInfo={lastBackupInfo}
-                />
-              )}
+                {activeView === "procedimentos" && (
+                  <ProcedimentosView
+                    procedures={procedures}
+                    isLoading={isLoading}
+                    showImportDialog={showImportDialog}
+                    setShowImportDialog={setShowImportDialog}
+                    createProcedure={createProcedure}
+                    exportBackup={exportBackup}
+                    importBackup={importBackup}
+                    moveProcedure={moveProcedure}
+                    onSelectProcedure={setSelectedProcedure}
+                    touchProcedureDate={touchProcedureDate}
+                    lastBackupInfo={lastBackupInfo}
+                  />
+                )}
 
-              {activeView === "fila-remota" && (
-                <FilaRemotaView procedures={procedures} onSelectProcedure={setSelectedProcedure} touchProcedureDate={touchProcedureDate} />
-              )}
+                {activeView === "fila-remota" && (
+                  <FilaRemotaView procedures={procedures} onSelectProcedure={setSelectedProcedure} touchProcedureDate={touchProcedureDate} />
+                )}
 
-              {activeView === "fila-presencial" && (
-                <FilaPresencialView procedures={procedures} onSelectProcedure={setSelectedProcedure} touchProcedureDate={touchProcedureDate} />
-              )}
+                {activeView === "fila-presencial" && (
+                  <FilaPresencialView procedures={procedures} onSelectProcedure={setSelectedProcedure} touchProcedureDate={touchProcedureDate} />
+                )}
 
-              {activeView === "checklists" && <ChecklistsView />}
+                {activeView === "checklists" && <ChecklistsView />}
 
-              {activeView === "manual" && <ManualView />}
+                {activeView === "manual" && <ManualView />}
 
-              {activeView === "documentacao" && (
-                <section aria-label="Documentação do sistema"><DocumentationPage /></section>
-              )}
+                {activeView === "documentacao" && (
+                  <section aria-label="Documentação do sistema"><DocumentationPage /></section>
+                )}
 
-              {activeView === "robocopy" && <RobocopyView />}
+                {activeView === "robocopy" && <RobocopyView />}
 
-              {activeView === "formatacao" && <FormatacaoView />}
+                {activeView === "formatacao" && <FormatacaoView />}
 
-              {activeView === "mensagens-supervisores" && <SupervisorMessagesView />}
-            </Suspense>
-          </main>
+                {activeView === "mensagens-supervisores" && <SupervisorMessagesView />}
+              </Suspense>
+            </main>
 
-          <ProcedureDetailDialog
-            selectedProcedure={selectedProcedure}
-            onClose={() => setSelectedProcedure(null)}
-            onUpdate={(proc) => { updateProcedure(proc); setSelectedProcedure(proc); }}
-          />
+            <ProcedureDetailDialog
+              selectedProcedure={selectedProcedure}
+              onClose={() => setSelectedProcedure(null)}
+              onUpdate={(proc) => { updateProcedure(proc); setSelectedProcedure(proc); }}
+            />
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </WorkTimerProvider>
   );
 };
 
